@@ -2,16 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { DatabaseConnectionService } from './database-connection.service';
 @Module({
-  imports: [ TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: '123',
-    database: 'taskNest',
-    entities: ['dist/**/*.entity.js'],
-    synchronize: true
+  imports: [ TypeOrmModule.forRootAsync({
+    useClass: DatabaseConnectionService
   })],
   controllers: [AppController],
   providers: [AppService],
