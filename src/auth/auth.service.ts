@@ -1,25 +1,40 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { LoginDTO, RegistrationDTO } from 'src/models/user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from 'src/entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
 
-    private mockUser = {
-        email:"vjpking5913@gmail.com",
-        token:'jwt.token',
-        username:'eriksyiuh',
-        bio:'I love Gia Han',
-        image: null
-    }
+    constructor (
 
-    register( credentials: RegistrationDTO){
-        return this.mockUser
-    }
-    login( credentials: LoginDTO ){
-        if(credentials.email === this.mockUser.email){
-            return this.mockUser
+        @InjectRepository(UserEntity) private userRepo:
+        Repository<UserEntity>,
+
+    ){}
+
+    async register( credentials: RegistrationDTO){
+        try {
+            const user = this.userRepo.create(credentials)
+            await user.save()
+        } catch (error) {
+            if(error.code === '23505'){
+                throw new ConflictException('Username has already taken')
+            }
+            throw new InternalServerErrorException()
         }
-        throw new InternalServerErrorException()
+    }
+    async login( {email, password}: LoginDTO ){
+        try {
+            const user = await this.userRepo.findOne({where: {email}})
+            if(user && await user.comparePassword(password)){
+                return user
+            }
+            throw new UnauthorizedException('Invalid Credentials')
+        } catch (error) {
+            throw new UnauthorizedException('Invalid Credentials')
+        }
     }
 
 }
