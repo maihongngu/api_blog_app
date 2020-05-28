@@ -1,4 +1,5 @@
 import { IsEmail, IsString, MinLength, MaxLength } from 'class-validator'
+import { classToPlain } from 'class-transformer'
 
 
 export class LoginDTO{
@@ -19,3 +20,9 @@ export class RegistrationDTO extends LoginDTO{
     username: string
 
 }
+
+
+export interface AuthPayload{
+    username: string
+}
+
