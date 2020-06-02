@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConnectionService } from './database-connection.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { ProductModule } from './product/product.module';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -12,6 +13,7 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     UserModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
