@@ -1,5 +1,6 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Post, Body, Delete } from '@nestjs/common';
 import { ProductService } from './product.service';
+import { ProductEntity } from 'src/entities/product.entity';
 
 @Controller('products')
 export class ProductController {
@@ -29,5 +30,17 @@ export class ProductController {
     return { productList: { listProducts } };
   }
 
+  @Post('/')
+  async createProduct(@Body() ProductEntity: ProductEntity){
+
+    return this.productService.createProduct(ProductEntity)
+
+  }
+
+
+  @Delete('/:id')
+  async deleteProduct(@Param() id){
+    return this.productService.deleteProduct(id)
+  }
   
 }

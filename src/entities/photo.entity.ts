@@ -8,7 +8,7 @@ export abstract class PhotoEntity extends AbstractEntity {
     @Column()
     url: string
 
-    @ManyToOne(type => ProductEntity, photo => photo.imgPaths)
+    @ManyToOne(type => ProductEntity, photo => photo.imgPaths, {onDelete:'CASCADE'})
     productId: ProductEntity
 
 

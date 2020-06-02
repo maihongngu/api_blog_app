@@ -1,8 +1,9 @@
 import { AbstractEntity } from "./abtract-entity";
 import { IsString, IsNumber } from "class-validator";
-import { Column, Entity, OneToMany, JoinTable, OneToOne, JoinColumn } from "typeorm";
+import { Column, Entity, OneToMany, JoinTable, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 import { PhotoEntity } from "./photo.entity";
 import { CategoryEntity } from "./category.entity";
+import { UserEntity } from "./user.entity";
 
 @Entity('products')
 export abstract class ProductEntity extends AbstractEntity {
@@ -23,7 +24,7 @@ export abstract class ProductEntity extends AbstractEntity {
     @IsNumber()
     quantity: number
 
-    @OneToOne(
+    @ManyToOne(
         type => CategoryEntity,
         category => category.id
     )
@@ -33,6 +34,8 @@ export abstract class ProductEntity extends AbstractEntity {
     @OneToMany(
         type => PhotoEntity,
         product => product.productId,
+        { cascade: ['insert', 'update'] }
       )
+    @JoinColumn()
     imgPaths: PhotoEntity[];
 }
